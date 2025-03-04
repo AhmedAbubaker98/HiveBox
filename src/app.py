@@ -4,6 +4,10 @@ app = Flask(__name__)
 
 # Define the software version
 SOFTWARE_VERSION = "1.0.0"
+#create home page with link to version.html
+@app.route('/')
+def home():
+    return render_template('home.html')
 
 @app.route('/version')
 def get_version():
