@@ -3,9 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Sensor Average</title>
+    <script>
+        function refreshAverage() {
+            fetch('/refresh_average')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.average !== undefined) {
+                        document.getElementById("average-value").textContent = data.average;
+                    } else {
+                        document.getElementById("average-value").textContent = "Error: " + data.error;
+                    }
+                })
+                .catch(error => console.error('Error refreshing data:', error));
+        }
+    </script>
 </head>
 <body>
-    <button onclick="location.href='version'">Go to Version Page</button>
+    <h1>Welcome to Sensor Dashboard</h1>
+    <h2>Average Measurement (Last Hour)</h2>
+    <p id="average-value">{{ average.average if average.average else average.error }}</p>
+    <button onclick="refreshAverage()">Refresh Average</button>
+    <footer>
+        <p>Software Version: {{ version }}</p>
+    </footer>
 </body>
 </html>
