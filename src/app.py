@@ -2,6 +2,10 @@ from flask import Flask, render_template, jsonify
 import requests
 import json
 from datetime import datetime, timedelta
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.ERROR, filename='app.log', format='%(asctime)s %(levelname)s %(message)s')
 
 app = Flask(__name__)
 
@@ -44,7 +48,8 @@ def get_average_last_hour():
             return {"error": "No data found for the last hour"}
     
     except requests.exceptions.RequestException as e:
-        return {"error": str(e)}
+        logging.error("Error fetching data from API", exc_info=True)
+        return {"error": "An internal error has occurred. Please try again later."}
 
 # Home page
 @app.route('/')
