@@ -17,8 +17,13 @@ def test_get_average_last_hour(mocker):
         {"createdAt": "2025-03-06T06:36:45.489Z", "value": "4.90"},
     ]
     
-    # Mock the requests.get method to return the mock_response
-    mocker.patch("requests.get", return_value=mocker.Mock(json=lambda: mock_response, status_code=200))
+    # Create a mock response object
+    mock_requests_get = mocker.Mock()
+    mock_requests_get.json.return_value = mock_response
+    mock_requests_get.status_code = 200
+
+    # Mock requests.get to return the mock response object
+    mocker.patch("requests.get", return_value=mock_requests_get)
     
     data = get_average_last_hour()
     assert "average" in data
