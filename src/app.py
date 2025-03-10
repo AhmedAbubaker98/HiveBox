@@ -10,7 +10,7 @@ logging.basicConfig(level=logging.ERROR, filename='app.log', format='%(asctime)s
 app = Flask(__name__)
 
 # Define the software version
-SOFTWARE_VERSION = "1.0.2"
+SOFTWARE_VERSION = "1.0.7"
 
 # Define the SenseBox ID and Sensor ID
 SENSEBOX_ID = "65e8d93acbf5700007f920ca"

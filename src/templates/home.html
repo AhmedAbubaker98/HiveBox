@@ -10,7 +10,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.average !== undefined) {
-                        document.getElementById("average-value").textContent = data.average;
+                        document.getElementById("average-value").textContent = data.average + "°C";
                     } else {
                         document.getElementById("average-value").textContent = "Error: " + data.error;
                     }
@@ -21,8 +21,8 @@
 </head>
 <body>
     <h1>Welcome to Sensor Dashboard</h1>
-    <h2>Average Measurement (Last Hour)</h2>
-    <p id="average-value">{{ average.average if average.average else average.error }}</p>
+    <h2>Average Temperature Measurement (Last Hour)</h2>
+    <p id="average-value">{{ average.average if average.average else average.error }}°C</p>
     <button onclick="refreshAverage()">Refresh Average</button>
     <footer>
         <p>Software Version: {{ version }}</p>
