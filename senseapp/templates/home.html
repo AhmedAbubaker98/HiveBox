@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Dashboard - SenseApp</title>
+    <script>
+        function refreshAverage() {
+            fetch('/refresh_average')
+                .then(response => response.json())
+                .then(data => {
+                    const averageValueElement = document.getElementById("average-value");
+                    const averageContainer = document.getElementById("average-container");
+                    if (data.average !== undefined && data.average !== null) {
+                        averageValueElement.textContent = data.average + "°C";
+                        const threshold = parseFloat(document.getElementById("threshold-value").textContent);
+                        if (data.average > threshold) {
+                            averageContainer.style.color = "red";
+                            averageContainer.title = "Temperature is above threshold!";
+                        } else {
+                            averageContainer.style.color = "green";
+                            averageContainer.title = "Temperature is within normal range.";
+                        }
+                    } else {
+                        averageValueElement.textContent = "Error: " + (data.error || "Could not fetch data");
+                        averageContainer.style.color = "orange";
+                        averageContainer.title = "Error fetching data.";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error refreshing data:', error);
+                    document.getElementById("average-value").textContent = "Error fetching data.";
+                    document.getElementById("average-container").style.color = "orange";
+                });
+        }
+        // Refresh on load and then every 30 seconds
+        window.onload = function() {
+            refreshAverage();
+            setInterval(refreshAverage, 30000); // Refresh every 30 seconds
+        };
+    </script>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f0f2f5; }
+        .content { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #333; }
+        #average-container { font-size: 1.2em; margin-bottom: 15px; }
+        button { padding: 10px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1em; }
+        button:hover { background-color: #0056b3; }
+        footer { margin-top: 30px; font-size: 0.9em; color: #777; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <h1>Sensor Dashboard</h1>
+        <h2>Average Temperature (Last Hour)</h2>
+        <p>Monitoring Sensor: <code>{{ SENSOR_ID }}</code> on Box: <code>{{ SENSEBOX_ID }}</code></p>
+        <p>Alert Threshold: <strong id="threshold-value">{{ threshold }}</strong>°C</p>
+        <p id="average-container">Average: <strong id="average-value">{{ average.average if average.average is not none else (average.error if average.error else "Loading...") }}</strong></p>
+        <button onclick="refreshAverage()">Refresh Average</button>
+        <footer>
+            <p>SenseApp Version: {{ version }}</p>
+        </footer>
+    </div>
+</body>
+</html>
